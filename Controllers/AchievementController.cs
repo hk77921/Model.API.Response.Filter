@@ -7,7 +7,7 @@ using System.Text;
 
 namespace API.Response.Filter.Controllers
 {
-    
+
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     [ApiVersion("1.0")]
@@ -17,7 +17,7 @@ namespace API.Response.Filter.Controllers
         private readonly IConfiguration _configuration;
         private readonly Service.UserProfile _userProfile;
 
-        public AchievementController(RequestValidator requestValidator,IConfiguration configuration, Service.UserProfile userProfile)
+        public AchievementController(RequestValidator requestValidator, IConfiguration configuration, Service.UserProfile userProfile)
         {
             _requestValidator = requestValidator;
             _configuration = configuration;
@@ -44,9 +44,11 @@ namespace API.Response.Filter.Controllers
 
             if (_requestValidator.IsValidToken(HttpContext))
             {
-               var data =Task.FromResult( _userProfile.GetAllUserProfile(_baseUrl,_param));  
-                
-                return Ok(data.Result.Result);
+                var data = Task.FromResult(_userProfile.GetAllUserProfile(_baseUrl, _param));
+                if (data.Result.Result != null)
+                    return Ok(data.Result.Result);
+                else
+                    return Conflict();
             }
             else
             {
@@ -54,7 +56,7 @@ namespace API.Response.Filter.Controllers
             }
 
 
-          
+
 
         }
 

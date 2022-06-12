@@ -13,7 +13,7 @@ namespace API.Response.Filter.Service
             string JsonResponse = string.Empty;
 
             List<ClientProfile> _clientList = new List<ClientProfile>();
-            ClientProfile _client = new ClientProfile();
+            ClientProfile ?_client = new ClientProfile();
 
             string _baseUrl = baseUrl;
             string _endPoint = "/users";
@@ -21,14 +21,19 @@ namespace API.Response.Filter.Service
             try
             {
                 _userList = await ExternalAPICall(_baseUrl, _endPoint, userParam);
-                _clientList = GetUsersWithParams(_userList, userParam);
-                if (_clientList.Count > 0)
+                if (!string.IsNullOrEmpty(_userList))
                 {
-                    foreach (var client in _clientList)
+                    _clientList = GetUsersWithParams(_userList, userParam);
+                    if (_clientList.Count > 0)
                     {
-                        _client = await GetUserProfileByID(baseUrl, client, userParam);
+                        foreach (var client in _clientList)
+                        {
+                            _client = await GetUserProfileByID(baseUrl, client, userParam);
 
+                        }
                     }
+                    else
+                        _client = null;
                 }
             }
             catch (Exception ex)
@@ -39,7 +44,7 @@ namespace API.Response.Filter.Service
 
             return _client;
         }
-        private async Task<ClientProfile> GetUserProfileByID(string baseUrl, ClientProfile client, Params userParam)
+        private async Task<ClientProfile> GetUserProfileByID(string baseUrl, ClientProfile? client, Params userParam)
         {
             string _client = string.Empty;
             string _baseUrl = baseUrl;
@@ -56,7 +61,7 @@ namespace API.Response.Filter.Service
 
                 foreach (var _certificate in _certificationsNode)
                 {
-                  
+
                     if (_certificate["unique_id"].ToString() == userParam.CertificateNumber)
                     {
                         client.CertificateNumber = _certificate["unique_id"].ToString();
@@ -65,9 +70,12 @@ namespace API.Response.Filter.Service
                         client.DateOfExpiry = _certificate["expiration_date"].ToString();
                         client.IsAttained = true;
                     }
-                   
-                }
 
+                }
+                if (client.IsAttained == false)
+                {
+                    client = null;
+                }
 
             }
             catch (Exception ex)
@@ -125,13 +133,13 @@ namespace API.Response.Filter.Service
                     if (item["last_name"].ToString().ToLower().Trim() == requestParam.Surname.ToLower().Trim()
                         && item["custom_field_1"].ToString().Trim() == requestParam.DateOfBirth.Trim())
                     {
-                       
+
                         _client.Surname = item["last_name"].ToString();
                         _client.FirstName = item["first_name"].ToString();
                         _client.DOB = item["custom_field_1"].ToString();
                         _client.ID = item["id"].ToString();
                         _client.CustomerPhotoType = 1;
-                        _client.CustomerPhoto= item["avatar"].ToString();
+                        _client.CustomerPhoto = item["avatar"].ToString();
 
                         _clientProfileList.Add(_client);
                     }
