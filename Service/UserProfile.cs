@@ -62,7 +62,7 @@ namespace API.Response.Filter.Service
                 foreach (var _certificate in _certificationsNode)
                 {
 
-                    if (_certificate["unique_id"].ToString() == userParam.CertificateNumber)
+                    if (_certificate["unique_id"].ToString() == userParam.CertificateNumber && _certificate["course_id"].ToString() ==userParam.CourseCode)
                     {
                         client.CertificateNumber = _certificate["unique_id"].ToString();
                         client.CourseCode = _certificate["course_id"].ToString();

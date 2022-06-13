@@ -2,6 +2,7 @@
 using API.Response.Filter.Models;
 using API.Response.Filter.Service;
 using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
 using System.Net.Http.Headers;
 using System.Text;
 
@@ -35,10 +36,19 @@ namespace API.Response.Filter.Controllers
 
             if (string.IsNullOrEmpty(CertificateNumber) || string.IsNullOrEmpty(Surname) || string.IsNullOrEmpty(DateOfBirth) || string.IsNullOrEmpty(CourseCode))
                 return BadRequest();
+            if (DateOfBirth.Trim().Length > 8)
+                return BadRequest("Date of birth parameter is  not valid");
+
+
+
+            var _dob = DateTime.ParseExact(DateOfBirth, "ddMMyyyy", CultureInfo.InvariantCulture);
+            string _formattedDOB = _dob.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
+                  
+
 
             _param.CertificateNumber = CertificateNumber;
             _param.Surname = Surname;
-            _param.DateOfBirth = DateOfBirth;
+            _param.DateOfBirth = _formattedDOB;
             _param.CourseCode = CourseCode;
             var _baseUrl = _configuration.GetValue<string>("LMS_Base_URL");
 

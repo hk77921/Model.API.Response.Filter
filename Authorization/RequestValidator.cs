@@ -12,7 +12,6 @@ namespace API.Response.Filter.Authorization
             _configuration = configuration;
         }
 
-
         public bool IsValidToken(HttpContext context)
         {
             bool isValid = false;
@@ -52,5 +51,7 @@ namespace API.Response.Filter.Authorization
             return isValid;
 
         }
+ 
+                
     }
 }
