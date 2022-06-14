@@ -1,0 +1,22 @@
+
+{
+    "region" : "us-east-1",
+    "configuration" : "Debug",
+    "framework"     : "net6.0",
+    "self-contained" : false,
+    "application"    : "APIResponseFilter",
+    "environment"    : "test",
+    "app-path"       : "/",
+    "iis-website"    : "Default Web Site",
+    "enable-xray"    : false,
+    "enhanced-health-type" : "basic",
+    "additional-options"   : "\"aws:autoscaling:launchconfiguration,SecurityGroups\"=\"sg-010106bab2904ab0b\";\"aws:ec2:vpc,Subnets\"=\"subnet-03bfc4e2a8ce88224\"",
+    "solution-stack"       : "64bit Amazon Linux 2 v2.3.2 running .NET Core",
+    "environment-type"     : "SingleInstance",
+    "cname"                : "api-accredex-dev",
+    "instance-type"        : "t3a.medium",
+    "key-pair"             : "",
+    "instance-profile"     : "aws-elasticbeanstalk-ec2-role",
+    "service-role"         : "aws-elasticbeanstalk-service-role",
+    "proxy-server"         : "nginx"
+}
