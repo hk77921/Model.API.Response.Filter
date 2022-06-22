@@ -1,5 +1,6 @@
 ﻿using API.Response.Filter.Models;
 using System.Configuration;
+using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
@@ -13,7 +14,7 @@ namespace API.Response.Filter.Service
             string JsonResponse = string.Empty;
 
             List<ClientProfile> _clientList = new List<ClientProfile>();
-            ClientProfile ?_client = new ClientProfile();
+            ClientProfile? _client = new ClientProfile();
 
             string _baseUrl = baseUrl;
             string _endPoint = "/users";
@@ -62,12 +63,21 @@ namespace API.Response.Filter.Service
                 foreach (var _certificate in _certificationsNode)
                 {
 
-                    if (_certificate["unique_id"].ToString() == userParam.CertificateNumber && _certificate["course_id"].ToString() ==userParam.CourseCode)
+                    if (_certificate["unique_id"].ToString() == userParam.CertificateNumber && _certificate["course_id"].ToString() == userParam.CourseCode)
                     {
                         client.CertificateNumber = _certificate["unique_id"].ToString();
                         client.CourseCode = _certificate["course_id"].ToString();
-                        client.DateOfIssue = _certificate["issued_date"].ToString();
-                        client.DateOfExpiry = _certificate["expiration_date"].ToString();
+
+
+                        var _doi = DateTime.ParseExact(_certificate["issued_date"].ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                        string _formattedDateofIssue = _doi.ToString("dd-MM-yyyy", CultureInfo.InvariantCulture);
+                        client.DateOfIssue = _formattedDateofIssue;
+
+                       
+                        var _doe = DateTime.ParseExact(_certificate["expiration_date"].ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                        string _formattedDateofExpire = _doe.ToString("dd-MM-yyyy", CultureInfo.InvariantCulture);
+
+                        client.DateOfExpiry = _formattedDateofExpire;
                         client.IsAttained = true;
                     }
 

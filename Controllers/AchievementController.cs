@@ -58,7 +58,7 @@ namespace API.Response.Filter.Controllers
                 if (data.Result.Result != null)
                     return Ok(data.Result.Result);
                 else
-                    return Conflict();
+                    return NotFound();
             }
             else
             {
